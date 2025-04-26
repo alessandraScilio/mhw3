@@ -176,6 +176,62 @@ if (subscriptionButton)
     subscriptionButton.addEventListener('click', thanksFunction);
 
 
+// Wheather section 
+
+function onJson(json) {
+    console.log('JSON ricevuto');
+    
+    const result = document.querySelector('#weather-result'); 
+    if(result !== null)
+        result.innerHTML = '';
+
+    const meteo = document.createElement('div');
+    meteo.classList.add('meteo');
+
+    if (json.error) {
+        const error = document.createElement('div');
+        error.classList.add('meteo');
+        error.textContent = 'City not found!';
+        result.appendChild(error);
+    } else {
+    const img = document.createElement('img');
+    img.src = 'http:' + json.current.condition.icon;
+    
+    const caption = document.createElement('span');
+    caption.textContent = json.location.name + " , " + json.location.region + " , " + json.location.country + " : " + json.current.temp_c + "°C , " + json.current.condition.text;
+
+    meteo.appendChild(img);
+    meteo.appendChild(caption);
+    result.appendChild(meteo);
+    }
+}
+
+
+
+function onResponse(response) {
+    console.log('Risposta ricevuta');
+    return response.json();
+}
+
+function showWeather(event) {
+    event.preventDefault();
+
+    const city = document.querySelector('#city-input');
+    const encodedCity = encodeURIComponent(city.value);
+
+    console.log('Eseguo ricerca: ' + encodedCity);
+    
+    const key = 'secret';
+    const url = 'https://api.weatherapi.com/v1/current.json?key=' + key + '&q=' + encodedCity + '&aqi=no';
+
+    console.log('URL: ' + url);
+
+    fetch(url).then(onResponse).then(onJson);
+}
+
+// Event listener
+const weatherButton = document.querySelector('#submit');
+weatherButton.addEventListener('click', showWeather);
 
 
 
