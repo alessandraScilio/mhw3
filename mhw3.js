@@ -176,7 +176,7 @@ if (subscriptionButton)
     subscriptionButton.addEventListener('click', thanksFunction);
 
 
-// Wheather section 
+// Wheather section: weather api 
 
 function onJson(json) {
     console.log('JSON ricevuto');
@@ -207,7 +207,6 @@ function onJson(json) {
 }
 
 
-
 function onResponse(response) {
     console.log('Risposta ricevuta');
     return response.json();
@@ -230,9 +229,135 @@ function showWeather(event) {
 }
 
 // Event listener
-const weatherButton = document.querySelector('#submit');
+const weatherButton = document.querySelector('#search-bar #submit');
 weatherButton.addEventListener('click', showWeather);
 
 
+// Amadeus : traval API
+
+function onJson(json) {
+    console.log('JSON ricevuto');
+    const flightResult = document.querySelector('#flight-result'); 
+    
+    if(flightResult !== null)
+        flightResult.innerHTML = '';
+
+    const flightDiv = document.createElement('div');
+    flightDiv.classList.add('flight');
+
+    if (!json.data) {
+        const error = document.createElement('div');
+        error.classList.add('flight');
+        error.textContent = 'Flight not found!';
+        flightResult.appendChild(error);
+    } else {
+
+        const flights = json.data;
+        let number = flights.length;
+        console.log('Numero di voli trovati: ' + number);
+
+        if (number > 5) {
+            number = 5;
+        }
+
+        if (number === 0) {
+            const error = document.createElement('div');
+            error.classList.add('flight');
+            error.textContent = 'Sorry, we found nothing!';
+            flightResult.appendChild(error);
+        }
+
+        for (let i = 0; i < number; i++) {
+            const flight = flights[i];
+            
+            const departure = flight.itineraries[0].segments[0].departure.iataCode;
+            const departureTime = flight.itineraries[0].segments[0].departure.at;
+            const dTime = departureTime.substring(0,5);
+
+            const arrival = flight.itineraries[0].segments[0].arrival.iataCode;
+            const arrivalTime = flight.itineraries[0].segments[0].arrival.at;
+            const aTime = arrivalTime.substring(0,5);
+
+            const flightNumber = flight.itineraries[0].segments[0].carrierCode + flight.itineraries[0].segments[0].number;
+
+            const price = flight.price.total;
+
+            const caption = document.createElement('span');
+            caption.textContent = "From: " + departure + "at :" + dTime + "\n " +  
+                                  "To" + arrival + "at : " + aTime + 
+                                  "Flight number: " + flightNumber + "\n" +
+                                  "Price" + price + "€";
+
+            flightDiv.appendChild(caption);
+            flightResult.appendChild(flightDiv);
+        }
+    }
+}
+
+function onResponse(response) {
+    console.log('Risposta ricevuta');
+    return response.json();
+}
+
+function flightSearch(event) {
+
+    event.preventDefault();
+
+    const departureCity = document.querySelector('#departure-input');
+    const encodedDepartureCity = encodeURIComponent(departureCity.value);
+
+    const destinationCity = document.querySelector('#destination-input');
+    const encodedDestinationCity = encodeURIComponent(destinationCity.value);
+
+    const flightDate = document.querySelector('#date-input');
+
+    console.log('Eseguo ricerca: ' + encodedDepartureCity + ' - ' + encodedDestinationCity);
+    
+    fetch('https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=' 
+    + encodedDepartureCity + '&destinationLocationCode=' + encodedDestinationCity 
+    + '&departureDate=' + flightDate.value + '&adults=1',
+    {
+        headers:
+        {
+            'Authorization': 'Bearer ' +  token
+        }
+    }
+).then(onResponse).then(onJson).catch((error) => console.log(error));
+}
 
 
+// Richiesta del token
+
+function onTokenJson(json)
+{
+  token = json.access_token;
+  console.log('Token ricevuto:', token);
+}
+
+
+function onTokenResponse(response){
+    return response.json();
+}
+
+const clientKey = 'secret';
+const clientSecret = 'secret';
+let token;
+
+fetch('https://test.api.amadeus.com/v1/security/oauth2/token',
+    {
+        method: 'POST',
+        body: 'grant_type=client_credentials',
+        headers:
+        {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(clientKey + ':' + clientSecret)
+        }
+    }
+    )
+    .then(onResponse)
+    .then(onTokenJson)
+    .catch((error) => console.error('Errore richiesta token: ', error));
+
+
+const travelButton = document.querySelector('#flight-search-bar #submit');
+travelButton.addEventListener('click', flightSearch);

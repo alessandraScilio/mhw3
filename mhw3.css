@@ -760,6 +760,59 @@ html, body {
     }
 }
 
+/*Flight section*/
+
+#flight-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font);
+    padding: 10vh 0;
+    background-color: rgba(229,233,253,255);
+    border-top: 5px solid var(--bg-color);
+}
+
+#flight-search-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2vw;
+    margin-bottom: 5vh;
+    font-size: 3vh;
+}
+
+#flight-search-bar input {
+    padding: 1vh 2vw;
+    border-radius: 100px;
+    border: none;
+    font-size: 2vh;
+    font-family: var(--font);
+    width: 30vw;
+} 
+
+#flight-search-bar #submit { 
+    background-color: var(--text-color);
+    color: white;
+    padding: 1vh 2vw;
+    cursor: pointer;
+}
+
+#flight-search-bar #submit:hover {
+    background-color: rgba(42, 47, 141, 255); 
+    transform: scale(1.05);
+}
+
+.flight {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 2vw;
+}
+
+
+
 /*Weather section*/
 
 #weather-section {
@@ -837,6 +890,8 @@ html, body {
     }
 
 }
+
+
 
 
 /*FOOTER SECTION*/
