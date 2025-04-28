@@ -761,6 +761,8 @@ html, body {
 }
 
 /*Flight section*/
+/*<img id="background-image" src="mappa.jpg">
+          <div id="background-overlay"></div>*/
 
 #flight-section {
     display: flex;
@@ -771,7 +773,12 @@ html, body {
     padding: 10vh 0;
     background-color: rgba(229,233,253,255);
     border-top: 5px solid var(--bg-color);
+    background: linear-gradient(rgba(148, 171, 249, 0.6), rgba(88, 117, 242, 0.8)),
+    url('mappa.jpg');
+
+    background-size: cover;
 }
+
 
 #flight-search-bar {
     display: flex;
