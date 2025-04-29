@@ -761,8 +761,6 @@ html, body {
 }
 
 /*Flight section*/
-/*<img id="background-image" src="mappa.jpg">
-          <div id="background-overlay"></div>*/
 
 #flight-section {
     display: flex;
@@ -775,7 +773,6 @@ html, body {
     border-top: 5px solid var(--bg-color);
     background: linear-gradient(rgba(148, 171, 249, 0.6), rgba(88, 117, 242, 0.8)),
     url('mappa.jpg');
-
     background-size: cover;
 }
 
@@ -811,11 +808,49 @@ html, body {
     transform: scale(1.05);
 }
 
+
+/* Contenitore generale dei risultati */
+#flight-result {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 3vh;
+    margin-top: 5vh;
+    font-size: 2vh;
+}
+
+/* Card singolo volo */
 .flight {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 2vw;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2vh;
+    background-color: rgba(255, 255, 255, 0.75); /* semi-trasparente */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 40vw;
+    transition: transform 0.2s ease;
+}
+
+.flight:hover {
+    transform: scale(1.02);
+}
+
+/* Singola riga di info */
+.flight-caption {
+    font-weight: 500;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* Titolo del risultato */
+.flight-caption:first-child {
+    font-size: 2.5vh;
+    font-weight: bold;
+    margin-bottom: 1vh;
+    color: var(--features-text);
 }
 
 

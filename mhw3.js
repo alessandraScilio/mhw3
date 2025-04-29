@@ -242,9 +242,6 @@ function onJson(json) {
     if(flightResult !== null)
         flightResult.innerHTML = '';
 
-    const flightDiv = document.createElement('div');
-    flightDiv.classList.add('flight');
-
     if (!json.data) {
         const error = document.createElement('div');
         error.classList.add('flight');
@@ -260,6 +257,7 @@ function onJson(json) {
             number = 5;
         }
 
+
         if (number === 0) {
             const error = document.createElement('div');
             error.classList.add('flight');
@@ -267,29 +265,60 @@ function onJson(json) {
             flightResult.appendChild(error);
         }
 
+
         for (let i = 0; i < number; i++) {
+
+            const flightDiv = document.createElement('div');
+            flightDiv.classList.add('flight');
+            
             const flight = flights[i];
             
             const departure = flight.itineraries[0].segments[0].departure.iataCode;
             const departureTime = flight.itineraries[0].segments[0].departure.at;
-            const dTime = departureTime.substring(0,5);
+            const dTime = departureTime.substring(11,16);
 
             const arrival = flight.itineraries[0].segments[0].arrival.iataCode;
             const arrivalTime = flight.itineraries[0].segments[0].arrival.at;
-            const aTime = arrivalTime.substring(0,5);
+            const aTime = arrivalTime.substring(11,16);
 
             const flightNumber = flight.itineraries[0].segments[0].carrierCode + flight.itineraries[0].segments[0].number;
 
             const price = flight.price.total;
 
-            const caption = document.createElement('span');
-            caption.textContent = "From: " + departure + "at :" + dTime + "\n " +  
-                                  "To" + arrival + "at : " + aTime + 
-                                  "Flight number: " + flightNumber + "\n" +
-                                  "Price" + price + "€";
+            const stopover = flight.itineraries[0].segments[0].numberOfStops;
+            const stopoverText = stopover === 0 ? "Non-stop" : stopover + " stop(s)";
 
-            flightDiv.appendChild(caption);
+
+            // Result
+            const index = i+1;
+
+            const captionResult = document.createElement('div');
+            captionResult.classList.add('flight-caption');
+            captionResult.textContent = "Result: " + index ;
+            flightDiv.appendChild(captionResult);
+
+            // FROM 
+            const captionFrom = document.createElement('div');
+            captionFrom.classList.add('flight-caption');
+            captionFrom.textContent = "From: " + departure + " at : " + dTime + 
+                                       " To: " + arrival + " at : " + aTime;
+            flightDiv.appendChild(captionFrom);
+
+            // PRICE
+            const captionPrice = document.createElement('div');
+            captionPrice.classList.add('flight-caption');
+            captionPrice.textContent = "Price: " + price + " €";
+            flightDiv.appendChild(captionPrice); 
+
+            // FLIGHT number
+            const captionFlight = document.createElement('div');
+            captionFlight.classList.add('flight-caption');
+            captionFlight.textContent = " Stopovers: " + stopoverText;
+            flightDiv.appendChild(captionFlight);
+
+            // INTERA CAPTION
             flightResult.appendChild(flightDiv);
+
         }
     }
 }
@@ -322,12 +351,11 @@ function flightSearch(event) {
             'Authorization': 'Bearer ' +  token
         }
     }
-).then(onResponse).then(onJson).catch((error) => console.log(error));
+).then(onResponse).then(onJson)
 }
 
 
 // Richiesta del token
-
 function onTokenJson(json)
 {
   token = json.access_token;
@@ -339,8 +367,8 @@ function onTokenResponse(response){
     return response.json();
 }
 
-const clientKey = 'secret';
-const clientSecret = 'secret';
+const clientKey = '7l1p9eezeXxoFpYv4S2jxdsEO5kArfVw';
+const clientSecret = '4iKzZDx2R6BCoiLh';
 let token;
 
 fetch('https://test.api.amadeus.com/v1/security/oauth2/token',
@@ -356,8 +384,6 @@ fetch('https://test.api.amadeus.com/v1/security/oauth2/token',
     )
     .then(onResponse)
     .then(onTokenJson)
-    .catch((error) => console.error('Errore richiesta token: ', error));
-
 
 const travelButton = document.querySelector('#flight-search-bar #submit');
 travelButton.addEventListener('click', flightSearch);
