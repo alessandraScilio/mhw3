@@ -367,8 +367,8 @@ function onTokenResponse(response){
     return response.json();
 }
 
-const clientKey = '7l1p9eezeXxoFpYv4S2jxdsEO5kArfVw';
-const clientSecret = '4iKzZDx2R6BCoiLh';
+const clientKey = 'clientId';
+const clientSecret = 'clientSecret';
 let token;
 
 fetch('https://test.api.amadeus.com/v1/security/oauth2/token',
